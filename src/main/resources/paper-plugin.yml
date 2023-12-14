@@ -1,0 +1,4 @@
+name: SkinAnatomy
+version: '${version}'
+main: ru.dverkask.skinanatomy.SkinAnatomy
+api-version: '1.20'
