@@ -19,8 +19,10 @@ public class PlayerSkinBody implements Body {
     @Getter
     @Setter
     private BufferedImage body;
-    public PlayerSkinBody(String skinUrl) throws IOException {
-        this.body = ImageLoader.loadImage(skinUrl);
+    public PlayerSkinBody(final String skinUrl) throws IOException {
+        BufferedImage skin = ImageLoader.loadImage(skinUrl);
+
+        this.body = skin.getSubimage(16, 16, 24, 32);
     }
     @Override
     public SkinPartData getFrontSide() {
