@@ -7,16 +7,10 @@ import ru.dverkask.skinanatomy.utils.ImageLoader;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+@Getter
+@Setter
 public abstract class PlayerSkinPart {
-    protected SkinPartData front;
-    protected SkinPartData back;
-    protected SkinPartData right;
-    protected SkinPartData left;
-    protected SkinPartData top;
-    protected SkinPartData bottom;
-
-    @Getter @Setter protected BufferedImage skinPart;
-
+    protected BufferedImage skinPart;
     public PlayerSkinPart(final String skinUrl, int x, int y, int w, int h) throws IOException {
         BufferedImage skin = ImageLoader.loadImage(skinUrl);
         this.skinPart = skin.getSubimage(x, y, w, h);

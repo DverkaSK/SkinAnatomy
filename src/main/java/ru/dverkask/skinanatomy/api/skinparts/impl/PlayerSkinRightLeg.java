@@ -17,15 +17,12 @@ public class PlayerSkinRightLeg extends PlayerSkinPart implements RightLeg {
     private SkinPartData left;
     private SkinPartData top;
     private SkinPartData bottom;
-    @Getter
-    @Setter
-    private BufferedImage rightLeg;
     public PlayerSkinRightLeg(final String skinUrl) throws IOException {
         super(skinUrl, 0, 16, 16, 32);
     }
     @Override
     public SkinPartData getFrontSide() {
-        return null;
+        return new SkinPartData();
     }
 
     @Override

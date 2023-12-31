@@ -2,6 +2,7 @@ package ru.dverkask.skinanatomy.api.skinparts.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.dverkask.skinanatomy.api.PlayerSkinPart;
 import ru.dverkask.skinanatomy.api.SkinPartData;
 import ru.dverkask.skinanatomy.api.skinparts.LeftLeg;
 import ru.dverkask.skinanatomy.utils.ImageLoader;
@@ -9,20 +10,15 @@ import ru.dverkask.skinanatomy.utils.ImageLoader;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class PlayerSkinLeftLeg implements LeftLeg {
+public class PlayerSkinLeftLeg extends PlayerSkinPart implements LeftLeg {
     private SkinPartData front;
     private SkinPartData back;
     private SkinPartData right;
     private SkinPartData left;
     private SkinPartData top;
     private SkinPartData bottom;
-    @Getter
-    @Setter
-    private BufferedImage leftLeg;
     public PlayerSkinLeftLeg(final String skinUrl) throws IOException {
-        BufferedImage skin = ImageLoader.loadImage(skinUrl);
-
-        this.leftLeg = skin.getSubimage(0, 48, 32, 16);
+        super(skinUrl, 0, 48, 32, 16);
     }
     @Override
     public SkinPartData getFrontSide() {

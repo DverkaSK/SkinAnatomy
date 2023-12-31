@@ -2,6 +2,7 @@ package ru.dverkask.skinanatomy.api.skinparts.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.dverkask.skinanatomy.api.PlayerSkinPart;
 import ru.dverkask.skinanatomy.api.SkinPartData;
 import ru.dverkask.skinanatomy.api.skinparts.Body;
 import ru.dverkask.skinanatomy.utils.ImageLoader;
@@ -9,78 +10,73 @@ import ru.dverkask.skinanatomy.utils.ImageLoader;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class PlayerSkinBody implements Body {
+public class PlayerSkinBody extends PlayerSkinPart implements Body {
     private SkinPartData front;
     private SkinPartData back;
     private SkinPartData right;
     private SkinPartData left;
     private SkinPartData top;
     private SkinPartData bottom;
-    @Getter
-    @Setter
-    private BufferedImage body;
     public PlayerSkinBody(final String skinUrl) throws IOException {
-        BufferedImage skin = ImageLoader.loadImage(skinUrl);
-
-        this.body = skin.getSubimage(16, 16, 24, 32);
+        super(skinUrl, 16, 16, 24, 32);
     }
     @Override
     public SkinPartData getFrontSide() {
-        return null;
+        return this.front;
     }
 
     @Override
     public SkinPartData getBackSide() {
-        return null;
+        return this.back;
     }
 
     @Override
     public SkinPartData getRightSide() {
-        return null;
+        return this.right;
     }
 
     @Override
     public SkinPartData getLeftSide() {
-        return null;
+        return this.left;
     }
 
     @Override
     public SkinPartData getTopSide() {
-        return null;
+        return this.top;
     }
 
     @Override
     public SkinPartData getBottomSide() {
-        return null;
+        return this.bottom;
     }
 
     @Override
     public void setFrontSide(SkinPartData data) {
-
+        this.front = data;
     }
 
     @Override
     public void setBackSide(SkinPartData data) {
-
+        this.back = data;
     }
 
     @Override
     public void setLeftSide(SkinPartData data) {
-
+        this.left = data;
     }
 
     @Override
     public void setRightSide(SkinPartData data) {
-
+        this.right = data;
     }
 
     @Override
     public void setTopSide(SkinPartData data) {
-
+        this.top = data;
     }
 
     @Override
     public void setBottomSide(SkinPartData data) {
-
+        this.bottom = data;
     }
 }
