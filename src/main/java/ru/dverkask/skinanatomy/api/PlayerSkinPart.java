@@ -15,4 +15,11 @@ public abstract class PlayerSkinPart {
         BufferedImage skin = ImageLoader.loadImage(skinUrl);
         this.skinPart = skin.getSubimage(x, y, w, h);
     }
+
+    protected SkinPartData createSkinPartData(int x, int y, int width, int height) {
+        return new SkinPartData(
+                getSkinPart().getSubimage(x, y, width, height),
+                x, y
+        );
+    }
 }

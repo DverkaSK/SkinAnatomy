@@ -19,64 +19,71 @@ public class PlayerSkinLeftLeg extends PlayerSkinPart implements LeftLeg {
     private SkinPartData bottom;
     public PlayerSkinLeftLeg(final String skinUrl) throws IOException {
         super(skinUrl, 0, 48, 32, 16);
+
+        this.front = createSkinPartData(20, 4, 4, 12);
+        this.back = createSkinPartData(28, 4, 4, 12);
+        this.right = createSkinPartData(16, 4, 4, 12);
+        this.left = createSkinPartData(24, 4, 4, 12);
+        this.top = createSkinPartData(20, 0, 4, 4);
+        this.bottom = createSkinPartData(24, 0, 4, 4);
     }
     @Override
     public SkinPartData getFrontSide() {
-        return null;
+        return this.front;
     }
 
     @Override
     public SkinPartData getBackSide() {
-        return null;
+        return this.back;
     }
 
     @Override
     public SkinPartData getRightSide() {
-        return null;
+        return this.right;
     }
 
     @Override
     public SkinPartData getLeftSide() {
-        return null;
+        return this.left;
     }
 
     @Override
     public SkinPartData getTopSide() {
-        return null;
+        return this.top;
     }
 
     @Override
     public SkinPartData getBottomSide() {
-        return null;
+        return this.bottom;
     }
 
     @Override
     public void setFrontSide(SkinPartData data) {
-
+        this.front = data;
     }
 
     @Override
     public void setBackSide(SkinPartData data) {
-
+        this.back = data;
     }
 
     @Override
     public void setLeftSide(SkinPartData data) {
-
+        this.left = data;
     }
 
     @Override
     public void setRightSide(SkinPartData data) {
-
+        this.right = data;
     }
 
     @Override
     public void setTopSide(SkinPartData data) {
-
+        this.top = data;
     }
 
     @Override
     public void setBottomSide(SkinPartData data) {
-
+        this.bottom = data;
     }
 }

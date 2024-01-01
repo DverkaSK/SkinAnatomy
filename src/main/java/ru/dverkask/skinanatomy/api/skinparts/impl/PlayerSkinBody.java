@@ -17,9 +17,18 @@ public class PlayerSkinBody extends PlayerSkinPart implements Body {
     private SkinPartData left;
     private SkinPartData top;
     private SkinPartData bottom;
+
     public PlayerSkinBody(final String skinUrl) throws IOException {
         super(skinUrl, 16, 16, 24, 32);
+
+        this.front = createSkinPartData(4, 4, 8, 12);
+        this.back = createSkinPartData(16, 4, 8, 12);
+        this.right = createSkinPartData(0, 4, 4, 12);
+        this.left = createSkinPartData(12, 4, 4, 12);
+        this.top = createSkinPartData(4, 0, 8, 4);
+        this.bottom = createSkinPartData(12, 0, 8, 4);
     }
+
     @Override
     public SkinPartData getFrontSide() {
         return this.front;
