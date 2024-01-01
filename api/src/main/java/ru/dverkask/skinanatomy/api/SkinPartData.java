@@ -1,10 +1,14 @@
 package ru.dverkask.skinanatomy.api;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.image.BufferedImage;
 
 @AllArgsConstructor
+@Getter
+@Setter
 public class SkinPartData {
     private BufferedImage image;
     private int           width;
