@@ -10,6 +10,7 @@ import ru.dverkask.skinanatomy.utils.ImageLoader;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+@Getter
 public class PlayerSkinBody extends PlayerSkinPart implements Body {
     private SkinPartData front;
     private SkinPartData back;

@@ -10,15 +10,18 @@ import java.io.IOException;
 @Getter
 @Setter
 public abstract class PlayerSkinPart {
-    protected BufferedImage skinPart;
+    protected SkinPartData skinPart;
     public PlayerSkinPart(final String skinUrl, int x, int y, int w, int h) throws IOException {
         BufferedImage skin = ImageLoader.loadImage(skinUrl);
-        this.skinPart = skin.getSubimage(x, y, w, h);
+        this.skinPart = new SkinPartData(
+                skin.getSubimage(x, y, w, h),
+                x, y
+        );
     }
 
     protected SkinPartData createSkinPartData(int x, int y, int width, int height) {
         return new SkinPartData(
-                getSkinPart().getSubimage(x, y, width, height),
+                getSkinPart().getImage().getSubimage(x, y, width, height),
                 x, y
         );
     }

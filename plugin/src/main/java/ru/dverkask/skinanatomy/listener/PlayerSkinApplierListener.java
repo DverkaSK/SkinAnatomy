@@ -11,7 +11,7 @@ import ru.dverkask.skinanatomy.skin.SkinManager;
 
 import java.io.IOException;
 
-public class PlayerSkinListener implements Listener {
+public class PlayerJoin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) throws IOException, MineSkinException, DataRequestException {
         Player player = e.getPlayer();
