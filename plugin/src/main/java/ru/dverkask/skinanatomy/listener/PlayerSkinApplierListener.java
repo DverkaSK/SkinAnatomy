@@ -1,27 +1,54 @@
 package ru.dverkask.skinanatomy.listener;
 
-import net.skinsrestorer.api.exception.DataRequestException;
-import net.skinsrestorer.api.exception.MineSkinException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import ru.dverkask.skinanatomy.api.ResultSkin;
+import ru.dverkask.skinanatomy.api.SkinAnatomy;
+import ru.dverkask.skinanatomy.api.SkinAnatomyInitializer;
+import ru.dverkask.skinanatomy.api.skinparts.impl.*;
 import ru.dverkask.skinanatomy.skin.CustomSkinApplier;
+import ru.dverkask.skinanatomy.skin.SkinLoader;
 import ru.dverkask.skinanatomy.skin.SkinManager;
-
-import java.io.IOException;
-
-public class PlayerJoin implements Listener {
+public class PlayerSkinApplierListener implements Listener {
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) throws IOException, MineSkinException, DataRequestException {
+    public void onPlayerJoin(PlayerJoinEvent e) throws Exception {
         Player player = e.getPlayer();
 
-        String skinUrl = SkinManager.getSkinByNickname("5opka")
+        SkinAnatomy prisonerSkin = new SkinAnatomyInitializer("https://s.namemc.com/i/5d80c07187786e91.png");
+        SkinAnatomy playerSkin = new SkinAnatomyInitializer(SkinManager.getSkinByNickname("Mipix")
                 .getAsJsonObject("textures")
                 .getAsJsonObject("SKIN")
                 .get("url")
-                .getAsString();
+                .getAsString());
 
-        CustomSkinApplier.apply(player, skinUrl);
+        ResultSkin resultSkin = playerSkin.getResultSkin();
+
+        PlayerSkinBody      body      = (PlayerSkinBody) prisonerSkin.getBody();
+        PlayerSkinRightLeg  rightLeg  = (PlayerSkinRightLeg) prisonerSkin.getRightLeg();
+        PlayerSkinLeftLeg   leftLeg   = (PlayerSkinLeftLeg) prisonerSkin.getLeftLeg();
+        PlayerSkinRightHand rightHand = (PlayerSkinRightHand) prisonerSkin.getRightHand();
+        PlayerSkinLeftHand  leftHand  = (PlayerSkinLeftHand) prisonerSkin.getLeftHand();
+
+        resultSkin.drawPart(body.getSkinPart().getImage(),
+                body.getSkinPart().getX(),
+                body.getSkinPart().getY());
+        resultSkin.drawPart(rightHand.getSkinPart().getImage(),
+                rightHand.getSkinPart().getX(),
+                rightHand.getSkinPart().getY());
+        resultSkin.drawPart(leftHand.getSkinPart().getImage(),
+                leftHand.getSkinPart().getX(),
+                leftHand.getSkinPart().getY());
+        resultSkin.drawPart(rightLeg.getSkinPart().getImage(),
+                rightLeg.getSkinPart().getX(),
+                rightLeg.getSkinPart().getY());
+        resultSkin.drawPart(leftLeg.getSkinPart().getImage(),
+                leftLeg.getSkinPart().getX(),
+                leftLeg.getSkinPart().getY());
+
+        player.sendMessage("LOL");
+
+        CustomSkinApplier.apply(player, SkinLoader.getSkinURL(resultSkin));
     }
 }

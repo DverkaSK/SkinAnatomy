@@ -5,4 +5,7 @@
 /.idea/
 /gradle/
 /plugin/build/
+/plugin/.gradle/
+/plugin/.idea/
+/plugin/gradle/
 /api/build/
