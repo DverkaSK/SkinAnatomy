@@ -16,7 +16,11 @@ public class PlayerSkinApplierListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) throws Exception {
         Player player = e.getPlayer();
 
-        SkinAnatomy prisonerSkin = new SkinAnatomyInitializer("https://s.namemc.com/i/5d80c07187786e91.png");
+        SkinAnatomy prisonerSkin = new SkinAnatomyInitializer(SkinManager.getSkinByNickname("5opka")
+                .getAsJsonObject("textures")
+                .getAsJsonObject("SKIN")
+                .get("url")
+                .getAsString());
         SkinAnatomy playerSkin = new SkinAnatomyInitializer(SkinManager.getSkinByNickname("Mipix")
                 .getAsJsonObject("textures")
                 .getAsJsonObject("SKIN")
