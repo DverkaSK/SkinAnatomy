@@ -9,3 +9,5 @@
 /plugin/.idea/
 /plugin/gradle/
 /api/build/
+/plugin/src/main/java/ru/dverkask/skinanatomy/listener/PlayerSkinApplierListener.java/
+/plugin/src/main/java/ru/dverkask/skinanatomy/listener/

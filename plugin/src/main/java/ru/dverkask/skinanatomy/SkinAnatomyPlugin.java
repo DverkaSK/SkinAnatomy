@@ -12,10 +12,15 @@ import ru.dverkask.skinanatomy.tabcompleter.SkinAnatomyTabCompleter;
 public final class SkinAnatomyPlugin extends JavaPlugin {
     @Getter
     private static SkinsRestorer skinsRestorerAPI;
+    @Getter
+    private static SkinAnatomyPlugin instance;
 
     @Override
     public void onEnable() {
+        instance = this;
         skinsRestorerAPI = SkinsRestorerProvider.get();
+
+        saveDefaultConfig();
 
         Bukkit.getPluginManager().registerEvents(new PlayerSkinApplierListener(), this);
 
@@ -26,9 +31,5 @@ public final class SkinAnatomyPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-    }
-
-    private void initConfig() {
-
     }
 }

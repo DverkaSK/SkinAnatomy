@@ -16,6 +16,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class SkinLoader {
+    private final static String token = "Bearer " + SkinAnatomyPlugin.getInstance().getConfig().getString("skinanatomy.imgurAccessToken");
     private static String upload(BufferedImage image) throws Exception {
         String boundary = Long.toHexString(System.currentTimeMillis());
         String CRLF     = "\r\n";
@@ -24,7 +25,7 @@ public class SkinLoader {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Authorization", "Bearer 19ada568ee32146ab2ac0450e040accfba9e9aea");
+        connection.setRequestProperty("Authorization", token);
         connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
         var outputStream = new ByteArrayOutputStream();
