@@ -1,5 +1,6 @@
 package ru.dverkask.skinanatomy.command;
 
+import com.google.gson.JsonObject;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -102,15 +103,17 @@ public class SkinAnatomyCommand implements CommandExecutor {
                 SkinAnatomy playerSkin;
                 SkinAnatomy targetSkin = null;
                 ResultSkin  resultSkin;
-                if (SkinManager.getSkinByNickname(player.getName())
-                        .has("textures")) {
-                    playerSkin = new SkinAnatomyInitializer(SkinManager.getSkinByNickname(player.getName())
+
+                JsonObject playerSkinJson = SkinManager.getSkinByNickname(player.getName());
+
+                if (playerSkinJson == null || !playerSkinJson.has("textures")) {
+                    playerSkin = new SkinAnatomyInitializer(DEFAULT_SKIN_URL);
+                } else {
+                    playerSkin = new SkinAnatomyInitializer(playerSkinJson
                             .getAsJsonObject("textures")
                             .getAsJsonObject("SKIN")
                             .get("url")
                             .getAsString());
-                } else {
-                    playerSkin = new SkinAnatomyInitializer(DEFAULT_SKIN_URL);
                 }
 
                 resultSkin = skins.containsKey(player.getUniqueId()) ?
@@ -122,66 +125,74 @@ public class SkinAnatomyCommand implements CommandExecutor {
                 if (matcher.matches()) {
                     targetSkin = new SkinAnatomyInitializer(args[2]);
                 } else {
-                    if (SkinManager.getSkinByNickname(args[2])
-                            .has("textures")) {
-                        targetSkin = new SkinAnatomyInitializer(SkinManager.getSkinByNickname(player.getName())
+                    JsonObject targetSkinJson = SkinManager.getSkinByNickname(args[2]);
+
+                    if (targetSkinJson == null || !targetSkinJson.has("textures")) {
+                        player.sendMessage(SKIN_BY_NICKNAME_NOT_FOUND);
+                    } else {
+                        targetSkin = new SkinAnatomyInitializer(targetSkinJson
                                 .getAsJsonObject("textures")
                                 .getAsJsonObject("SKIN")
                                 .get("url")
                                 .getAsString());
-                    } else {
-                        player.sendMessage(SKIN_BY_NICKNAME_NOT_FOUND);
                     }
                 }
 
-                if (args[1].equals("head")) {
-                    PlayerSkinHead head = (PlayerSkinHead) targetSkin.getHead();
-
-                    resultSkin.drawPart(head.getSkinPart().getImage(),
-                            head.getSkinPart().getX(),
-                            head.getSkinPart().getY());
-
-                    player.sendMessage(HEAD_LOAD_SUCCESS);
-                } else if (args[1].equals("body")) {
-                    PlayerSkinBody body = (PlayerSkinBody) targetSkin.getBody();
-
-                    resultSkin.drawPart(body.getSkinPart().getImage(),
-                            body.getSkinPart().getX(),
-                            body.getSkinPart().getY());
-
-                    player.sendMessage(BODY_LOAD_SUCCESS);
-                } else if (args[1].equals("lefthand")) {
-                    PlayerSkinLeftHand leftHand = (PlayerSkinLeftHand) targetSkin.getLeftHand();
-
-                    resultSkin.drawPart(leftHand.getSkinPart().getImage(),
-                            leftHand.getSkinPart().getX(),
-                            leftHand.getSkinPart().getY());
-
-                    player.sendMessage(LEFT_HAND_LOAD_SUCCESS);
-                } else if (args[1].equals("righthand")) {
-                    PlayerSkinRightHand rightHand = (PlayerSkinRightHand) targetSkin.getRightHand();
-
-                    resultSkin.drawPart(rightHand.getSkinPart().getImage(),
-                            rightHand.getSkinPart().getX(),
-                            rightHand.getSkinPart().getY());
-
-                    player.sendMessage(RIGHT_HAND_LOAD_SUCCESS);
-                } else if (args[1].equals("leftleg")) {
-                    PlayerSkinLeftLeg leftLeg = (PlayerSkinLeftLeg) targetSkin.getLeftLeg();
-
-                    resultSkin.drawPart(leftLeg.getSkinPart().getImage(),
-                            leftLeg.getSkinPart().getX(),
-                            leftLeg.getSkinPart().getY());
-
-                    player.sendMessage(LEFT_LEG_LOAD_SUCCESS);
-                } else if (args[1].equals("rightleg")) {
-                    PlayerSkinRightLeg rightLeg = (PlayerSkinRightLeg) targetSkin.getRightLeg();
-
-                    resultSkin.drawPart(rightLeg.getSkinPart().getImage(),
-                            rightLeg.getSkinPart().getX(),
-                            rightLeg.getSkinPart().getY());
-
-                    player.sendMessage(RIGHT_LEG_LOAD_SUCCESS);
+                switch (args[1]) {
+                    case "head" -> {
+                        PlayerSkinHead head = (PlayerSkinHead) targetSkin.getHead();
+                        resultSkin.drawPart(
+                                head.getSkinPart().getImage(),
+                                head.getSkinPart().getX(),
+                                head.getSkinPart().getY()
+                        );
+                        player.sendMessage(HEAD_LOAD_SUCCESS);
+                    }
+                    case "body" -> {
+                        PlayerSkinBody body = (PlayerSkinBody) targetSkin.getBody();
+                        resultSkin.drawPart(
+                                body.getSkinPart().getImage(),
+                                body.getSkinPart().getX(),
+                                body.getSkinPart().getY()
+                        );
+                        player.sendMessage(BODY_LOAD_SUCCESS);
+                    }
+                    case "lefthand" -> {
+                        PlayerSkinLeftHand leftHand = (PlayerSkinLeftHand) targetSkin.getLeftHand();
+                        resultSkin.drawPart(
+                                leftHand.getSkinPart().getImage(),
+                                leftHand.getSkinPart().getX(),
+                                leftHand.getSkinPart().getY()
+                        );
+                        player.sendMessage(LEFT_HAND_LOAD_SUCCESS);
+                    }
+                    case "righthand" -> {
+                        PlayerSkinRightHand rightHand = (PlayerSkinRightHand) targetSkin.getRightHand();
+                        resultSkin.drawPart(
+                                rightHand.getSkinPart().getImage(),
+                                rightHand.getSkinPart().getX(),
+                                rightHand.getSkinPart().getY()
+                        );
+                        player.sendMessage(RIGHT_HAND_LOAD_SUCCESS);
+                    }
+                    case "leftleg" -> {
+                        PlayerSkinLeftLeg leftLeg = (PlayerSkinLeftLeg) targetSkin.getLeftLeg();
+                        resultSkin.drawPart(
+                                leftLeg.getSkinPart().getImage(),
+                                leftLeg.getSkinPart().getX(),
+                                leftLeg.getSkinPart().getY()
+                        );
+                        player.sendMessage(LEFT_LEG_LOAD_SUCCESS);
+                    }
+                    case "rightleg" -> {
+                        PlayerSkinRightLeg rightLeg = (PlayerSkinRightLeg) targetSkin.getRightLeg();
+                        resultSkin.drawPart(
+                                rightLeg.getSkinPart().getImage(),
+                                rightLeg.getSkinPart().getX(),
+                                rightLeg.getSkinPart().getY()
+                        );
+                        player.sendMessage(RIGHT_LEG_LOAD_SUCCESS);
+                    }
                 }
 
                 String skinUrl = SkinLoader.getSkinURL(resultSkin);

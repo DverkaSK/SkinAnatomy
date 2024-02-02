@@ -1,16 +1,16 @@
 package ru.dverkask.skinanatomy.api;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import ru.dverkask.skinanatomy.api.skinparts.*;
 
 public interface SkinAnatomy {
-    @NonNull Body getBody();
-    @NonNull Head getHead();
+    @lombok.NonNull Body getBody();
+    @lombok.NonNull Head getHead();
     @NonNull LeftHand getLeftHand();
-    @NonNull RightHand getRightHand();
-    @NonNull LeftLeg getLeftLeg();
-    @NonNull RightLeg getRightLeg();
-    @NonNull ResultSkin getResultSkin();
+    @lombok.NonNull RightHand getRightHand();
+    @lombok.NonNull LeftLeg getLeftLeg();
+    @lombok.NonNull RightLeg getRightLeg();
+    @lombok.NonNull ResultSkin getResultSkin();
     void setBody(Body body);
     void setHead(Head head);
     void setLeftHand(LeftHand leftHand);
