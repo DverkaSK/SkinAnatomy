@@ -52,7 +52,6 @@ dependencies {
 }
 
 jar {
-    processResources.exclude('')
     archiveFileName = 'SkinAnatomy.jar'
 }
 
