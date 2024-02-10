@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.dverkask.skinanatomy.SkinAnatomyPlugin;
 import ru.dverkask.skinanatomy.api.ResultSkin;
-import ru.dverkask.skinanatomy.api.SkinAnatomy;
-import ru.dverkask.skinanatomy.api.SkinAnatomyInitializer;
-import ru.dverkask.skinanatomy.api.skinparts.impl.*;
+import ru.dverkask.skinanatomy.api.SkinAnatomyAPI;
+import ru.dverkask.skinanatomy.api.SkinDecomposer;
+import ru.dverkask.skinanatomy.api.skinparts.*;
 import ru.dverkask.skinanatomy.skin.CustomSkinApplier;
 import ru.dverkask.skinanatomy.skin.SkinLoader;
 import ru.dverkask.skinanatomy.skin.SkinManager;
@@ -100,16 +100,16 @@ public class SkinAnatomyCommand implements CommandExecutor {
                 String  urlPattern = "^https://.*\\.png$";
                 Pattern pattern    = Pattern.compile(urlPattern);
 
-                SkinAnatomy playerSkin;
-                SkinAnatomy targetSkin = null;
+                SkinDecomposer playerSkin;
+                SkinDecomposer targetSkin = null;
                 ResultSkin  resultSkin;
 
                 JsonObject playerSkinJson = SkinManager.getSkinByNickname(player.getName());
 
                 if (playerSkinJson == null || !playerSkinJson.has("textures")) {
-                    playerSkin = new SkinAnatomyInitializer(DEFAULT_SKIN_URL);
+                    playerSkin = SkinAnatomyAPI.createSkinDecomposer(DEFAULT_SKIN_URL);
                 } else {
-                    playerSkin = new SkinAnatomyInitializer(playerSkinJson
+                    playerSkin = SkinAnatomyAPI.createSkinDecomposer(playerSkinJson
                             .getAsJsonObject("textures")
                             .getAsJsonObject("SKIN")
                             .get("url")
@@ -123,14 +123,14 @@ public class SkinAnatomyCommand implements CommandExecutor {
                 Matcher matcher = pattern.matcher(args[2]);
 
                 if (matcher.matches()) {
-                    targetSkin = new SkinAnatomyInitializer(args[2]);
+                    targetSkin = SkinAnatomyAPI.createSkinDecomposer(args[2]);
                 } else {
                     JsonObject targetSkinJson = SkinManager.getSkinByNickname(args[2]);
 
                     if (targetSkinJson == null || !targetSkinJson.has("textures")) {
                         player.sendMessage(SKIN_BY_NICKNAME_NOT_FOUND);
                     } else {
-                        targetSkin = new SkinAnatomyInitializer(targetSkinJson
+                        targetSkin = SkinAnatomyAPI.createSkinDecomposer(targetSkinJson
                                 .getAsJsonObject("textures")
                                 .getAsJsonObject("SKIN")
                                 .get("url")

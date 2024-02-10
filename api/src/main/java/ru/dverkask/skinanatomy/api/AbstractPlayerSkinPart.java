@@ -9,9 +9,9 @@ import java.io.IOException;
 
 @Getter
 @Setter
-public abstract class PlayerSkinPart {
+public abstract class AbstractPlayerSkinPart {
     protected SkinPartData skinPart;
-    public PlayerSkinPart(final String skinUrl, int x, int y, int w, int h) throws IOException {
+    public AbstractPlayerSkinPart(final String skinUrl, int x, int y, int w, int h) throws IOException {
         BufferedImage skin = ImageLoader.loadImage(skinUrl);
         this.skinPart = new SkinPartData(
                 skin.getSubimage(x, y, w, h),

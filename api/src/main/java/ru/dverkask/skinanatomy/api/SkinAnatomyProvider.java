@@ -1,11 +1,11 @@
 package ru.dverkask.skinanatomy.api;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 public class SkinAnatomyProvider {
-    private static SkinAnatomy instance;
+    private static ISkinAnatomyAPI instance;
 
-    public static void register(@NonNull SkinAnatomy instanceToRegister) {
+    public static void register(@NonNull ISkinAnatomyAPI instanceToRegister) {
         if (instance != null) {
             throw new IllegalStateException("SkinAnatomyProvider is already initialized.");
         }
@@ -13,7 +13,7 @@ public class SkinAnatomyProvider {
         instance = instanceToRegister;
     }
 
-    public static @NonNull SkinAnatomy get() {
+    public static @NonNull ISkinAnatomyAPI get() {
         if (instance == null) {
             throw new IllegalStateException("SkinAnatomyProvider is not initialized.");
         }

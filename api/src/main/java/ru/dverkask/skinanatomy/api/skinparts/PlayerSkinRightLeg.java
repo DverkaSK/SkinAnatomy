@@ -1,16 +1,11 @@
-package ru.dverkask.skinanatomy.api.skinparts.impl;
+package ru.dverkask.skinanatomy.api.skinparts;
 
-import lombok.Getter;
-import lombok.Setter;
-import ru.dverkask.skinanatomy.api.PlayerSkinPart;
+import ru.dverkask.skinanatomy.api.AbstractPlayerSkinPart;
 import ru.dverkask.skinanatomy.api.SkinPartData;
-import ru.dverkask.skinanatomy.api.skinparts.RightLeg;
-import ru.dverkask.skinanatomy.utils.ImageLoader;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class PlayerSkinRightLeg extends PlayerSkinPart implements RightLeg {
+public class PlayerSkinRightLeg extends AbstractPlayerSkinPart {
     private SkinPartData front;
     private SkinPartData back;
     private SkinPartData right;
@@ -27,62 +22,50 @@ public class PlayerSkinRightLeg extends PlayerSkinPart implements RightLeg {
         this.top = createSkinPartData(4, 0, 4, 4);
         this.bottom = createSkinPartData(8, 0, 4, 4);
     }
-    @Override
     public SkinPartData getFrontSide() {
         return this.front;
     }
 
-    @Override
     public SkinPartData getBackSide() {
         return this.back;
     }
 
-    @Override
     public SkinPartData getRightSide() {
         return this.right;
     }
 
-    @Override
     public SkinPartData getLeftSide() {
         return this.left;
     }
 
-    @Override
     public SkinPartData getTopSide() {
         return this.top;
     }
 
-    @Override
     public SkinPartData getBottomSide() {
         return this.bottom;
     }
 
-    @Override
     public void setFrontSide(SkinPartData data) {
         this.front = data;
     }
 
-    @Override
     public void setBackSide(SkinPartData data) {
         this.back = data;
     }
 
-    @Override
     public void setLeftSide(SkinPartData data) {
         this.left = data;
     }
 
-    @Override
     public void setRightSide(SkinPartData data) {
         this.right = data;
     }
 
-    @Override
     public void setTopSide(SkinPartData data) {
         this.top = data;
     }
 
-    @Override
     public void setBottomSide(SkinPartData data) {
         this.bottom = data;
     }
