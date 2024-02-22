@@ -10,4 +10,4 @@
 /plugin/gradle/
 /api/build/
 /plugin/src/main/java/ru/dverkask/skinanatomy/listener/PlayerSkinApplierListener.java/
-/plugin/src/main/java/ru/dverkask/skinanatomy/listener/
+/plugin/src/main/java/ru/dverkask/skinanatomy/events/PlayerJoinSkinHandler.java/

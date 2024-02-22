@@ -1,5 +1,6 @@
 skinanatomy:
   messages:
+    skinUrl: "<gradient:#00c9ff:#92fe9d>Your skin URL: {url}</gradient>"
     loadSuccess:
       head: "<gradient:#00c9ff:#92fe9d>Head loaded successfully!</gradient>"
       body: "<gradient:#00c9ff:#92fe9d>Body loaded successfully!</gradient>"
@@ -13,6 +14,7 @@ skinanatomy:
       noPlayerSkin: "<red>You don't have a skin</red>"
       skinByNicknameNotFound: "<red>Skin by nickname not found</red>"
       errorLoadingSkin: "<red>Error loading skin</red>"
+      defaultSkinNotFound: "<red>Default skin not found!</red>"
   defaultSkinURL: ""
   imgurAccessToken: ""
 

@@ -1,61 +1,32 @@
 package ru.dverkask.skinanatomy.command;
 
-import com.google.gson.JsonObject;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.dverkask.skinanatomy.SkinAnatomyPlugin;
+import ru.dverkask.skinanatomy.api.AbstractPlayerSkinPart;
 import ru.dverkask.skinanatomy.api.ResultSkin;
 import ru.dverkask.skinanatomy.api.SkinAnatomyAPI;
 import ru.dverkask.skinanatomy.api.SkinDecomposer;
-import ru.dverkask.skinanatomy.api.skinparts.*;
 import ru.dverkask.skinanatomy.skin.CustomSkinApplier;
 import ru.dverkask.skinanatomy.skin.SkinLoader;
 import ru.dverkask.skinanatomy.skin.SkinManager;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import ru.dverkask.skinanatomy.utils.MessageUtils;
+import ru.dverkask.skinanatomy.utils.SkinUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SkinAnatomyCommand implements CommandExecutor {
-    private final Component         COMMAND_USAGE;
-    private final Component         NO_PERMISSION;
-    private final Component         NO_PLAYER_SKIN;
-    private final Component         SKIN_BY_NICKNAME_NOT_FOUND;
-    private final Component         ERROR_LOADING_SKIN;
-    private final Component         HEAD_LOAD_SUCCESS;
-    private final Component         BODY_LOAD_SUCCESS;
-    private final Component         LEFT_HAND_LOAD_SUCCESS;
-    private final Component         RIGHT_HAND_LOAD_SUCCESS;
-    private final Component         LEFT_LEG_LOAD_SUCCESS;
-    private final Component         RIGHT_LEG_LOAD_SUCCESS;
-    private final String            DEFAULT_SKIN_URL;
-    private final SkinAnatomyPlugin plugin =
-            SkinAnatomyPlugin.getInstance();
-    private final Map<UUID, String> skins  = new HashMap<>();
-
-    public SkinAnatomyCommand() {
-        this.COMMAND_USAGE = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.errors.commandUsage"));
-        this.NO_PERMISSION = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.errors.noPermission"));
-        this.NO_PLAYER_SKIN = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.errors.noPlayerSkin"));
-        this.SKIN_BY_NICKNAME_NOT_FOUND = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.errors.skinByNicknameNotFound"));
-        this.ERROR_LOADING_SKIN = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.errors.errorLoadingSkin"));
-        this.HEAD_LOAD_SUCCESS = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.loadSuccess.head"));
-        this.BODY_LOAD_SUCCESS = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.loadSuccess.body"));
-        this.LEFT_HAND_LOAD_SUCCESS = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.loadSuccess.leftHand"));
-        this.RIGHT_HAND_LOAD_SUCCESS = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.loadSuccess.rightHand"));
-        this.LEFT_LEG_LOAD_SUCCESS = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.loadSuccess.leftLeg"));
-        this.RIGHT_LEG_LOAD_SUCCESS = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("skinanatomy.messages.loadSuccess.rightLeg"));
-        this.DEFAULT_SKIN_URL = plugin.getConfig().getString("skinanatomy.defaultSkinURL");
-    }
-
+    private static final String DEFAULT_SKIN_URL = SkinAnatomyPlugin.getInstance().getConfig().getString("skinanatomy.defaultSkinURL");
+    private final SkinAnatomyPlugin PLUGIN = SkinAnatomyPlugin.getInstance();
     @Override
     public boolean onCommand(@NotNull CommandSender sender,
                              @NotNull Command command,
@@ -67,9 +38,9 @@ public class SkinAnatomyCommand implements CommandExecutor {
                     handleOneArgument(player, args);
                 } else if (args.length == 3) {
                     handleThreeArguments(player, args);
-                } else player.sendMessage(COMMAND_USAGE);
+                } else player.sendMessage(MessageUtils.COMMAND_USAGE.getComponent());
             } else {
-                player.sendMessage(NO_PERMISSION);
+                player.sendMessage(MessageUtils.NO_PERMISSION.getComponent());
             }
         }
 
@@ -80,130 +51,82 @@ public class SkinAnatomyCommand implements CommandExecutor {
                                    @NotNull String[] args) {
         try {
             if (args[0].equals("get")) {
-                player.sendMessage(skins.containsKey(player.getUniqueId()) ?
-                        skins.get(player.getUniqueId()) :
+                String message = PLUGIN.getConfig().getString(MessageUtils.SKIN_URL.getPath());
+                String url = SkinAnatomyAPI.getSkins().containsKey(player.getUniqueId()) ?
+                        SkinAnatomyAPI.getSkins().get(player.getUniqueId()) :
                         SkinManager.getSkinByNickname(player.getName())
                                 .getAsJsonObject("textures")
                                 .getAsJsonObject("SKIN")
                                 .get("url")
-                                .getAsString());
+                                .getAsString();
+                String clickUrl = "<click:open_url:" + url + ">" + url + "</click>";
+                message = message.replace("{url}", clickUrl);
+                player.sendMessage(MiniMessage.miniMessage().deserialize(message));
             }
         } catch (IOException e) {
-            player.sendMessage(NO_PLAYER_SKIN);
+            player.sendMessage(MessageUtils.NO_PLAYER_SKIN.getComponent());
         }
     }
 
     private void handleThreeArguments(@NotNull Player player,
                                       @NotNull String[] args) {
         try {
+            if (DEFAULT_SKIN_URL == null) {
+                player.sendMessage(MessageUtils.DEFAULT_SKIN_NOT_FOUND.getComponent());
+                return;
+            }
+
             if (args[0].equals("set")) {
                 String  urlPattern = "^https://.*\\.png$";
                 Pattern pattern    = Pattern.compile(urlPattern);
+                Matcher matcher    = pattern.matcher(args[2]);
 
-                SkinDecomposer playerSkin;
-                SkinDecomposer targetSkin = null;
-                ResultSkin  resultSkin;
+                SkinDecomposer playerSkin = SkinUtils.getPlayerSkin(player);
+                ResultSkin     resultSkin = SkinUtils.getResultSkin(player, playerSkin);
 
-                JsonObject playerSkinJson = SkinManager.getSkinByNickname(player.getName());
-
-                if (playerSkinJson == null || !playerSkinJson.has("textures")) {
-                    playerSkin = SkinAnatomyAPI.createSkinDecomposer(DEFAULT_SKIN_URL);
-                } else {
-                    playerSkin = SkinAnatomyAPI.createSkinDecomposer(playerSkinJson
-                            .getAsJsonObject("textures")
-                            .getAsJsonObject("SKIN")
-                            .get("url")
-                            .getAsString());
-                }
-
-                resultSkin = skins.containsKey(player.getUniqueId()) ?
-                        new ResultSkin(skins.get(player.getUniqueId())) :
-                        playerSkin.getResultSkin();
-
-                Matcher matcher = pattern.matcher(args[2]);
+                SkinDecomposer targetSkin;
 
                 if (matcher.matches()) {
                     targetSkin = SkinAnatomyAPI.createSkinDecomposer(args[2]);
                 } else {
-                    JsonObject targetSkinJson = SkinManager.getSkinByNickname(args[2]);
+                    targetSkin = SkinUtils.getTargetSkin(args[2]);
 
-                    if (targetSkinJson == null || !targetSkinJson.has("textures")) {
-                        player.sendMessage(SKIN_BY_NICKNAME_NOT_FOUND);
-                    } else {
-                        targetSkin = SkinAnatomyAPI.createSkinDecomposer(targetSkinJson
-                                .getAsJsonObject("textures")
-                                .getAsJsonObject("SKIN")
-                                .get("url")
-                                .getAsString());
-                    }
+                    if (targetSkin == null)
+                        player.sendMessage(MessageUtils.SKIN_BY_NICKNAME_NOT_FOUND.getComponent());
                 }
 
+                BiConsumer<AbstractPlayerSkinPart, Component> loadSkinPart = (skinPart, successMessage) -> {
+                    resultSkin.drawPart(
+                            skinPart.getSkinPart().getImage(),
+                            skinPart.getSkinPart().getX(),
+                            skinPart.getSkinPart().getY()
+                    );
+
+                    player.sendMessage(successMessage);
+                };
+
                 switch (args[1]) {
-                    case "head" -> {
-                        PlayerSkinHead head = (PlayerSkinHead) targetSkin.getHead();
-                        resultSkin.drawPart(
-                                head.getSkinPart().getImage(),
-                                head.getSkinPart().getX(),
-                                head.getSkinPart().getY()
-                        );
-                        player.sendMessage(HEAD_LOAD_SUCCESS);
-                    }
-                    case "body" -> {
-                        PlayerSkinBody body = (PlayerSkinBody) targetSkin.getBody();
-                        resultSkin.drawPart(
-                                body.getSkinPart().getImage(),
-                                body.getSkinPart().getX(),
-                                body.getSkinPart().getY()
-                        );
-                        player.sendMessage(BODY_LOAD_SUCCESS);
-                    }
-                    case "lefthand" -> {
-                        PlayerSkinLeftHand leftHand = (PlayerSkinLeftHand) targetSkin.getLeftHand();
-                        resultSkin.drawPart(
-                                leftHand.getSkinPart().getImage(),
-                                leftHand.getSkinPart().getX(),
-                                leftHand.getSkinPart().getY()
-                        );
-                        player.sendMessage(LEFT_HAND_LOAD_SUCCESS);
-                    }
-                    case "righthand" -> {
-                        PlayerSkinRightHand rightHand = (PlayerSkinRightHand) targetSkin.getRightHand();
-                        resultSkin.drawPart(
-                                rightHand.getSkinPart().getImage(),
-                                rightHand.getSkinPart().getX(),
-                                rightHand.getSkinPart().getY()
-                        );
-                        player.sendMessage(RIGHT_HAND_LOAD_SUCCESS);
-                    }
-                    case "leftleg" -> {
-                        PlayerSkinLeftLeg leftLeg = (PlayerSkinLeftLeg) targetSkin.getLeftLeg();
-                        resultSkin.drawPart(
-                                leftLeg.getSkinPart().getImage(),
-                                leftLeg.getSkinPart().getX(),
-                                leftLeg.getSkinPart().getY()
-                        );
-                        player.sendMessage(LEFT_LEG_LOAD_SUCCESS);
-                    }
-                    case "rightleg" -> {
-                        PlayerSkinRightLeg rightLeg = (PlayerSkinRightLeg) targetSkin.getRightLeg();
-                        resultSkin.drawPart(
-                                rightLeg.getSkinPart().getImage(),
-                                rightLeg.getSkinPart().getX(),
-                                rightLeg.getSkinPart().getY()
-                        );
-                        player.sendMessage(RIGHT_LEG_LOAD_SUCCESS);
-                    }
+                    case "head" ->
+                            loadSkinPart.accept(targetSkin.getHead(), MessageUtils.HEAD_LOAD_SUCCESS.getComponent());
+                    case "body" ->
+                            loadSkinPart.accept(targetSkin.getBody(), MessageUtils.BODY_LOAD_SUCCESS.getComponent());
+                    case "lefthand" ->
+                            loadSkinPart.accept(targetSkin.getLeftHand(), MessageUtils.LEFT_HAND_LOAD_SUCCESS.getComponent());
+                    case "righthand" ->
+                            loadSkinPart.accept(targetSkin.getRightHand(), MessageUtils.RIGHT_HAND_LOAD_SUCCESS.getComponent());
+                    case "leftleg" ->
+                            loadSkinPart.accept(targetSkin.getLeftLeg(), MessageUtils.LEFT_LEG_LOAD_SUCCESS.getComponent());
+                    case "rightleg" ->
+                            loadSkinPart.accept(targetSkin.getRightLeg(), MessageUtils.RIGHT_LEG_LOAD_SUCCESS.getComponent());
                 }
 
                 String skinUrl = SkinLoader.getSkinURL(resultSkin);
-                skins.put(player.getUniqueId(), skinUrl);
+                SkinAnatomyAPI.addCustomSkin(player.getUniqueId(), skinUrl);
                 CustomSkinApplier.apply(player, skinUrl);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            player.sendMessage(ERROR_LOADING_SKIN);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            player.sendMessage(MessageUtils.ERROR_LOADING_SKIN.getComponent());
         }
     }
 }
