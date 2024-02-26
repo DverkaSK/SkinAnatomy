@@ -7,6 +7,7 @@ import ru.dverkask.skinanatomy.api.skinparts.impl.*;
 import java.io.IOException;
 
 public class SkinAnatomyInitializer implements SkinAnatomy {
+    //Some changes
     private final Body body;
     private final Head head;
     private final LeftHand leftHand;
