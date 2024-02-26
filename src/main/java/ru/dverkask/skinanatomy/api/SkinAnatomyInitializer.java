@@ -8,6 +8,7 @@ import java.io.IOException;
 
 public class SkinAnatomyInitializer implements SkinAnatomy {
     //Some changes
+    //Some changes 2
     private final Body body;
     private final Head head;
     private final LeftHand leftHand;
