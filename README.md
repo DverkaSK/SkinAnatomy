@@ -16,8 +16,8 @@ SkinAnatomy is a plugin for Minecraft that allows users to edit every part of a 
 
 ## Commands
 
-| Команда | Описание |
-| ------- | -------- |
+| Command        | Description                                                |
+|----------------|------------------------------------------------------------|
 | `/skinanatomy` | Shows information about the plugin and available commands. |
 
 ## Permissions
