@@ -5,29 +5,28 @@ import net.skinsrestorer.api.SkinsRestorer;
 import net.skinsrestorer.api.SkinsRestorerProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.dverkask.skinanatomy.api.SkinAnatomy;
+import ru.dverkask.skinanatomy.api.SkinAnatomyAPI;
 import ru.dverkask.skinanatomy.api.SkinAnatomyProvider;
-import ru.dverkask.skinanatomy.api.SkinAnatomyWrapper;
 import ru.dverkask.skinanatomy.command.SkinAnatomyCommand;
 import ru.dverkask.skinanatomy.events.PlayerJoinSkinHandler;
 import ru.dverkask.skinanatomy.tabcompleter.SkinAnatomyTabCompleter;
 
-import java.util.UUID;
-
 public final class SkinAnatomyPlugin extends JavaPlugin {
     @Getter
-    private static SkinsRestorer      skinsRestorerAPI;
+    private static SkinsRestorer     skinsRestorerAPI;
     @Getter
-    private static SkinAnatomyPlugin  instance;
+    private static SkinAnatomyPlugin instance;
     @Getter
-    private static SkinAnatomyWrapper skinAnatomyAPI;
+    private static SkinAnatomy       skinAnatomyAPI;
 
     @Override
     public void onEnable() {
-        SkinAnatomyProvider.register(new SkinAnatomyWrapper());
+        SkinAnatomyProvider.register(SkinAnatomyAPI.INSTANCE);
 
         instance = this;
         skinsRestorerAPI = SkinsRestorerProvider.get();
-        skinAnatomyAPI = (SkinAnatomyWrapper) SkinAnatomyProvider.get();
+        skinAnatomyAPI = SkinAnatomyProvider.get();
 
         saveDefaultConfig();
 

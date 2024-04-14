@@ -8,10 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.dverkask.skinanatomy.SkinAnatomyPlugin;
-import ru.dverkask.skinanatomy.api.AbstractPlayerSkinPart;
-import ru.dverkask.skinanatomy.api.ResultSkin;
-import ru.dverkask.skinanatomy.api.SkinAnatomyAPI;
-import ru.dverkask.skinanatomy.api.SkinDecomposer;
+import ru.dverkask.skinanatomy.api.*;
 import ru.dverkask.skinanatomy.skin.CustomSkinApplier;
 import ru.dverkask.skinanatomy.skin.SkinLoader;
 import ru.dverkask.skinanatomy.skin.SkinManager;
@@ -25,8 +22,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SkinAnatomyCommand implements CommandExecutor {
-    private static final String DEFAULT_SKIN_URL = SkinAnatomyPlugin.getInstance().getConfig().getString("skinanatomy.defaultSkinURL");
-    private final SkinAnatomyPlugin PLUGIN = SkinAnatomyPlugin.getInstance();
+    private static final String            DEFAULT_SKIN_URL = SkinAnatomyPlugin.getInstance().getConfig().getString("skinanatomy.defaultSkinURL");
+    private final        SkinAnatomy       API              = SkinAnatomyAPI.INSTANCE;
+    private final        SkinAnatomyPlugin PLUGIN           = SkinAnatomyPlugin.getInstance();
     @Override
     public boolean onCommand(@NotNull CommandSender sender,
                              @NotNull Command command,
@@ -52,8 +50,8 @@ public class SkinAnatomyCommand implements CommandExecutor {
         try {
             if (args[0].equals("get")) {
                 String message = PLUGIN.getConfig().getString(MessageUtils.SKIN_URL.getPath());
-                String url = SkinAnatomyAPI.getSkins().containsKey(player.getUniqueId()) ?
-                        SkinAnatomyAPI.getSkins().get(player.getUniqueId()) :
+                String url = API.getSkins().containsKey(player.getUniqueId()) ?
+                        API.getSkins().get(player.getUniqueId()) :
                         SkinManager.getSkinByNickname(player.getName())
                                 .getAsJsonObject("textures")
                                 .getAsJsonObject("SKIN")
@@ -87,7 +85,7 @@ public class SkinAnatomyCommand implements CommandExecutor {
                 SkinDecomposer targetSkin;
 
                 if (matcher.matches()) {
-                    targetSkin = SkinAnatomyAPI.createSkinDecomposer(args[2]);
+                    targetSkin = API.createSkinDecomposer(args[2]);
                 } else {
                     targetSkin = SkinUtils.getTargetSkin(args[2]);
 
@@ -121,7 +119,7 @@ public class SkinAnatomyCommand implements CommandExecutor {
                 }
 
                 String skinUrl = SkinLoader.getSkinURL(resultSkin);
-                SkinAnatomyAPI.addCustomSkin(player.getUniqueId(), skinUrl);
+                API.addCustomSkin(player.getUniqueId(), skinUrl);
                 CustomSkinApplier.apply(player, skinUrl);
             }
         } catch (Exception e) {
