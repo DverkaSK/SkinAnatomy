@@ -15,6 +15,7 @@ import ru.dverkask.skinanatomy.SkinAnatomyPlugin;
 
 @Getter
 @Setter
+@Deprecated
 public class CustomSkinApplier {
     private static SkinApplier<Player> skinApplier = SkinAnatomyPlugin.getSkinsRestorerAPI().getSkinApplier(Player.class);
     private static MineSkinAPI mineSkinAPI = SkinAnatomyPlugin.getSkinsRestorerAPI().getMineSkinAPI();

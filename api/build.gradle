@@ -1,11 +1,14 @@
 buildscript {
+    ext.kotlin_version = '2.1.21'
     repositories {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+        mavenCentral()
     }
     dependencies {
         classpath "org.checkerframework:checkerframework-gradle-plugin:0.6.37"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -14,6 +17,7 @@ plugins {
 }
 
 apply plugin: "org.checkerframework"
+apply plugin: 'kotlin'
 
 group = 'ru.dverkask'
 version = '1.0'
@@ -41,8 +45,12 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 jar {
     archiveFileName = 'SkinAnatomyAPI.jar'
+}
+kotlin {
+    jvmToolchain(17)
 }

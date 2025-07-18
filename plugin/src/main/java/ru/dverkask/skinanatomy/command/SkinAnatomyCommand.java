@@ -21,6 +21,7 @@ import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class SkinAnatomyCommand implements CommandExecutor {
     private static final String            DEFAULT_SKIN_URL = SkinAnatomyPlugin.getInstance().getConfig().getString("skinanatomy.defaultSkinURL");
     private final        SkinAnatomy       API              = SkinAnatomyAPI.INSTANCE;
@@ -45,6 +46,7 @@ public class SkinAnatomyCommand implements CommandExecutor {
         return true;
     }
 
+    @Deprecated
     private void handleOneArgument(@NotNull Player player,
                                    @NotNull String[] args) {
         try {
@@ -66,6 +68,7 @@ public class SkinAnatomyCommand implements CommandExecutor {
         }
     }
 
+    @Deprecated
     private void handleThreeArguments(@NotNull Player player,
                                       @NotNull String[] args) {
         try {

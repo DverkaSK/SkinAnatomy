@@ -11,7 +11,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Base64;
 
+@Deprecated
 public class SkinManager {
+
+    @Deprecated
     public static JsonObject getSkinByNickname(final String nickname) throws IOException {
         try {
             URL           api           = new URL("https://api.mojang.com/users/profiles/minecraft/" + nickname);

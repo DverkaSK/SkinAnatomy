@@ -10,12 +10,20 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Deprecated
 public class ResultSkin {
+
+    @Deprecated
     private final int           WIDTH  = 64;
+
+    @Deprecated
     private final int           HEIGHT = 64;
+
     @Getter
+    @Deprecated
     private final BufferedImage skinImage;
 
+    @Deprecated
     public ResultSkin(String skinUrl) throws IOException {
         this.skinImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
@@ -28,6 +36,7 @@ public class ResultSkin {
         }
     }
 
+    @Deprecated
     public void drawPart(BufferedImage part, int x, int y) {
         Graphics2D g = skinImage.createGraphics();
         g.setComposite(AlphaComposite.Clear);

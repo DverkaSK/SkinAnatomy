@@ -1,6 +1,5 @@
 package ru.dverkask.skinanatomy.skin;
 
-import org.bukkit.entity.Player;
 import org.json.JSONObject;
 import ru.dverkask.skinanatomy.SkinAnatomyPlugin;
 import ru.dverkask.skinanatomy.api.ResultSkin;
@@ -15,8 +14,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+@Deprecated
 public class SkinLoader {
+
+    @Deprecated
     private final static String token = "Bearer " + SkinAnatomyPlugin.getInstance().getConfig().getString("skinanatomy.imgurAccessToken");
+
+    @Deprecated
     private static String upload(BufferedImage image) throws Exception {
         String boundary = Long.toHexString(System.currentTimeMillis());
         String CRLF     = "\r\n";
@@ -55,6 +59,7 @@ public class SkinLoader {
         }
     }
 
+    @Deprecated
     public static String getSkinURL(final ResultSkin resultSkin) throws Exception {
         JSONObject data = new JSONObject(upload(resultSkin.getSkinImage()))
                 .getJSONObject("data");

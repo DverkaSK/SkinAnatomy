@@ -12,10 +12,16 @@ import ru.dverkask.skinanatomy.skin.SkinManager;
 
 import java.io.IOException;
 
+@Deprecated
 public class SkinUtils {
+
+    @Deprecated
     private static final String      DEFAULT_SKIN_URL = SkinAnatomyPlugin.getInstance().getConfig().getString("skinanatomy.defaultSkinURL");
+
+    @Deprecated
     private static final SkinAnatomy API              = SkinAnatomyAPI.INSTANCE;
 
+    @Deprecated
     public static SkinDecomposer getPlayerSkin(@NonNull Player player) throws IOException {
         JsonObject playerSkinJson = SkinManager.getSkinByNickname(player.getName());
 
@@ -30,6 +36,7 @@ public class SkinUtils {
         return API.createSkinDecomposer(getSkinUrlFromJson(playerSkinJson));
     }
 
+    @Deprecated
     public static SkinDecomposer getTargetSkin(@NonNull String arg) throws IOException {
         JsonObject targetSkinJson = SkinManager.getSkinByNickname(arg);
 
@@ -39,6 +46,7 @@ public class SkinUtils {
         return API.createSkinDecomposer(getSkinUrlFromJson(targetSkinJson));
     }
 
+    @Deprecated
     public static ResultSkin getResultSkin(@NonNull Player player,
                                            @NonNull SkinDecomposer playerSkin) throws IOException {
         return API.getSkins().containsKey(player.getUniqueId()) ?
@@ -46,6 +54,7 @@ public class SkinUtils {
                 playerSkin.getResultSkin();
     }
 
+    @Deprecated
     private static String getSkinUrlFromJson(JsonObject json) {
         return json
                 .getAsJsonObject("textures")
