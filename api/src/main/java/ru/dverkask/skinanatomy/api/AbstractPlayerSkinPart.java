@@ -2,7 +2,7 @@ package ru.dverkask.skinanatomy.api;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.dverkask.skinanatomy.api.image.ImageLoader;
+import ru.dverkask.skinanatomy.utils.ImageLoader;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
