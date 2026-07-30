@@ -1,39 +1,101 @@
-# SkinAnatomy Plugin
+# SkinAnatomy
 
 ![logo](skinanatomy.png)
 
-SkinAnatomy is a plugin for Minecraft that allows users to edit every part of a player's skin. This plugin provides an API for interacting with the skin at the code level, as well as integration with Imgur for convenient storage and use of skins.
-## Demonstration
+SkinAnatomy is a small, framework-agnostic **Kotlin library** for editing and composing
+Minecraft player skin textures. It has no dependency on Bukkit, Paper, or any specific
+Minecraft server API - it only deals with the 64x64 skin image itself, so you can use it
+in a plugin, a bot, a web service, or a standalone tool.
 
-![gif](demo.gif)
+It lets you address a skin by its anatomical parts - head, body, left/right arm, left/right
+leg - and by side (front, back, left, right, top, bottom), edit any of those regions in
+place or graft one part from another skin, and render the result back out as a normal
+`BufferedImage`. Legacy 64x32 skins (pre-1.8, no overlay layer) are transparently upgraded
+to the modern 64x64 layout.
 
-## Capabilities
+What you do with the resulting texture - upload it, sign it through something like
+[SkinsRestorer](https://skinsrestorer.net)'s MineSkin integration, apply it to a player -
+is up to the consuming project; this library is deliberately scoped to just the image side
+of the problem.
 
-- Editing each part of the player’s skin (head, body, arms, legs).
-- Ability to edit different sides of skin parts (left, right).
-- Integration with Imgur for convenient storage of skins.
-- Support for commands and permissions to control the functionality of the plugin.
+## Adding it to your project
 
-## Commands
+Published via [JitPack](https://jitpack.io/#DverkaSK/SkinAnatomy) - it builds directly from
+this GitHub repository, no publishing step or account needed on your side.
 
-| Command        | Description                                                |
-|----------------|------------------------------------------------------------|
-| `/skinanatomy` | Shows information about the plugin and available commands. |
+```kotlin
+repositories {
+    maven("https://jitpack.io")
+}
 
-## Permissions
+dependencies {
+    // A tag (recommended, e.g. "v2.0.0"), a branch name, or a commit hash all work.
+    implementation("com.github.DverkaSK:SkinAnatomy:v2.0.0")
+}
+```
 
-- `skinanatomy.use` - allows the use of basic plugin functions.
-- `skinanatomy.admin` - provides access to all functions and settings of the plugin.
+The first build for a given tag/commit takes JitPack a minute or two the first time
+anyone requests it (it's compiling this repo on demand); after that it's cached.
 
-## Install
+### Local development
 
-1. Download the latest version of the plugin.
-2. Place the plugin file in the `plugins` folder of your server.
-3. Restart the server.
+Working on SkinAnatomy and another project at the same time? Skip JitPack entirely with a
+composite build - point the other project's `settings.gradle.kts` at this repo's
+directory and Gradle substitutes the dependency with the local sources, no publish step:
 
-## Settings
+```kotlin
+includeBuild("../SkinAnatomy")
+```
 
-The plugin uses the `config.yml` and `plugin.yml` files to configure messages, skin URLs and other parameters. You can read more about the configuration in the corresponding configuration files.
-## API
+Or publish a snapshot to your local Maven cache instead:
 
-SkinAnatomy provides an API for interacting with skins at the code level. To use the API, refer to the `SkinAnatomyAPI` class.
+```bash
+./gradlew publishToMavenLocal
+```
+
+then depend on `mavenLocal()`:
+
+```kotlin
+repositories { mavenLocal() }
+dependencies { implementation("ru.dverkask:SkinAnatomy:2.0.0") }
+```
+
+## Usage
+
+```kotlin
+import ru.dverkask.skinanatomy.api.skin.PlayerSkin
+import ru.dverkask.skinanatomy.api.enums.SkinPartType
+
+// Load once - every part below shares this same in-memory canvas.
+val skin = PlayerSkin.fromUrl("https://textures.minecraft.net/texture/...")
+// or: PlayerSkin.fromImage(existingBufferedImage)
+
+// Edit a region in place, or return a different BufferedImage - both are supported.
+skin.head.processImage { image ->
+    image // mutate via image.graphics, or return a brand-new BufferedImage
+}
+
+// Graft an entire part (all six sides) from another skin.
+val hat = PlayerSkin.fromUrl("https://example.com/other-skin.png")
+skin.copyPartFrom(hat, SkinPartType.HEAD)
+
+// Get the composed 64x64 texture back out.
+val texture: java.awt.image.BufferedImage = skin.render()
+```
+
+### API surface
+
+- `PlayerSkin` - loads a skin (`fromUrl` / `fromImage`) and exposes `head`, `body`,
+  `leftArm`, `rightArm`, `leftLeg`, `rightLeg`, plus `part(SkinPartType)`, `copyPartFrom`
+  and `render()`.
+- `ISkinPart` - `type`, `sides`, `getImage(SkinSide)`, `processImage(ImageProcessor)`.
+- `SkinPartType` / `SkinSide` - the six anatomical parts and the six faces of each.
+- `ImageLoader` - loads a texture from a URL via `java.net.http.HttpClient`.
+
+## Building from source
+
+```bash
+./gradlew build
+```
+
+Requires JDK 21+ (a matching toolchain is auto-provisioned via Gradle if none is found).

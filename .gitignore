@@ -1,14 +1,12 @@
-# Project exclude paths
-/.gradle/
-/build/
-/build/classes/java/main/
-/.idea/
-/gradle/
-/plugin/build/
-/plugin/.gradle/
-/plugin/.idea/
-/plugin/gradle/
-/api/build/
-/plugin/src/main/java/ru/dverkask/skinanatomy/listener/PlayerSkinApplierListener.java/
-/plugin/src/main/java/ru/dverkask/skinanatomy/events/PlayerJoinSkinHandler.java/
-/plugin/src/main/java/ru/dverkask/skinanatomy/events/
+# Gradle
+.gradle/
+.kotlin/
+build/
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
