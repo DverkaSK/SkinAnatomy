@@ -4,6 +4,7 @@ import ru.dverkask.skinanatomy.api.enums.SkinPartType
 import ru.dverkask.skinanatomy.api.enums.SkinSide
 import ru.dverkask.skinanatomy.api.skin.SkinCoordinates
 import ru.dverkask.skinanatomy.api.image.ImageProcessor
+import java.awt.AlphaComposite
 import java.awt.image.BufferedImage
 
 /**
@@ -34,7 +35,8 @@ abstract class BaseSkinPart(
             if (processed !== original) {
                 val graphics = canvas.createGraphics()
                 try {
-                    graphics.clearRect(coords.x, coords.y, coords.width, coords.height)
+                    // Src, not clearRect: clearRect fills with opaque black, not transparency.
+                    graphics.composite = AlphaComposite.Src
                     graphics.drawImage(processed, coords.x, coords.y, coords.width, coords.height, null)
                 } finally {
                     graphics.dispose()

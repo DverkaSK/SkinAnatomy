@@ -14,6 +14,14 @@ class PlayerSkinTest {
     private fun blankSkin(size: Int = 64): BufferedImage =
         BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
 
+    private fun filledSkin(color: Color): BufferedImage = blankSkin().apply {
+        graphics.apply {
+            this.color = color
+            fillRect(0, 0, width, height)
+            dispose()
+        }
+    }
+
     @Test
     fun `processImage mutating the original image in place is reflected on render`() {
         val skin = PlayerSkin.fromImage(blankSkin())
@@ -71,6 +79,28 @@ class PlayerSkinTest {
         assertEquals(Color.GREEN.rgb, target.render().getRGB(8, 8)) // head FRONT
         assertEquals(Color.GREEN.rgb, target.render().getRGB(8, 0)) // head TOP
         assertNotEquals(Color.GREEN.rgb, target.render().getRGB(20, 20)) // body FRONT untouched
+    }
+
+    @Test
+    fun `copying a transparent region leaves it transparent, not black`() {
+        val source = PlayerSkin.fromImage(blankSkin())
+        val target = PlayerSkin.fromImage(filledSkin(Color.RED))
+
+        target.copyPartFrom(source, SkinPartType.HEAD)
+
+        assertEquals(0, target.render().getRGB(8, 8) ushr 24, "head FRONT must end up fully transparent")
+    }
+
+    @Test
+    fun `processImage returning a transparent image leaves the region transparent, not black`() {
+        val skin = PlayerSkin.fromImage(filledSkin(Color.RED))
+
+        skin.head.processImage(object : ImageProcessor {
+            override fun process(image: BufferedImage): BufferedImage =
+                BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_ARGB)
+        })
+
+        assertEquals(0, skin.render().getRGB(8, 8) ushr 24, "head FRONT must end up fully transparent")
     }
 
     @Test

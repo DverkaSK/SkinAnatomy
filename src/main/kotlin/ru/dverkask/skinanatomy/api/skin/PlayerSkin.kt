@@ -10,6 +10,7 @@ import ru.dverkask.skinanatomy.api.skin.parts.PlayerLeftArm
 import ru.dverkask.skinanatomy.api.skin.parts.PlayerLeftLeg
 import ru.dverkask.skinanatomy.api.skin.parts.PlayerRightArm
 import ru.dverkask.skinanatomy.api.skin.parts.PlayerRightLeg
+import java.awt.AlphaComposite
 import java.awt.image.BufferedImage
 
 /**
@@ -43,8 +44,10 @@ class PlayerSkin private constructor(private val canvas: BufferedImage) {
 
         val graphics = canvas.createGraphics()
         try {
+            // Src replaces pixels outright, alpha included. clearRect would fill with the
+            // background colour - opaque black - so a transparent source pixel stayed black.
+            graphics.composite = AlphaComposite.Src
             targetPart.sides.forEach { (side, coords) ->
-                graphics.clearRect(coords.x, coords.y, coords.width, coords.height)
                 graphics.drawImage(sourcePart.getImage(side), coords.x, coords.y, null)
             }
         } finally {
