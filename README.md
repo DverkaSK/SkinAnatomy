@@ -40,15 +40,10 @@ as `com.github.DverkaSK:SkinAnatomy:<tag>` from `maven("https://jitpack.io")`.
 
 ### Releasing
 
-Credentials and the signing key go into `~/.gradle/gradle.properties` - never into this
-repository (see the comment in `build.gradle.kts` for the keys). Then:
-
-```bash
-./gradlew publishToMavenCentral
-```
-
-The upload only stages a deployment; review it and press **Publish** at
-<https://central.sonatype.com/publishing>. A Central release can never be deleted or replaced.
+Step by step, with the one-time setup and the pitfalls already hit: [RELEASING.md](RELEASING.md).
+In short - `./gradlew publishToMavenCentral` stages the upload, a human presses **Publish**
+at <https://central.sonatype.com/publishing>, and a Central release can never be deleted or
+replaced.
 
 ### Local development
 

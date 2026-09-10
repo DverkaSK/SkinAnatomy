@@ -39,9 +39,9 @@ tasks.jar {
     archiveBaseName.set("SkinAnatomy")
 }
 
-// Maven Central: io.github.dverkask:skinanatomy. The plugin adds the sources and javadoc jars
-// Central insists on. Credentials and the signing key live in ~/.gradle/gradle.properties,
-// never in this repository:
+// Maven Central: io.github.dverkask:skinanatomy - the full procedure is RELEASING.md. The
+// plugin adds the sources and javadoc jars Central insists on. Credentials and the signing
+// key live in ~/.gradle/gradle.properties, never in this repository:
 //   mavenCentralUsername, mavenCentralPassword            - a Central Portal user token
 //   signingInMemoryKey, signingInMemoryKeyPassword        - an ASCII-armoured GPG key
 //
