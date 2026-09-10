@@ -18,6 +18,8 @@ What you do with the resulting texture - upload it, sign it through something li
 is up to the consuming project; this library is deliberately scoped to just the image side
 of the problem.
 
+![demo](demo.gif)
+
 ## Adding it to your project
 
 Published via [JitPack](https://jitpack.io/#DverkaSK/SkinAnatomy) - it builds directly from
