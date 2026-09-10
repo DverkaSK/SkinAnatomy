@@ -32,8 +32,8 @@ repositories {
 }
 
 dependencies {
-    // A tag (recommended, e.g. "v2.0.0"), a branch name, or a commit hash all work.
-    implementation("com.github.DverkaSK:SkinAnatomy:v2.0.0")
+    // A tag (recommended, e.g. "v2.1.0"), a branch name, or a commit hash all work.
+    implementation("com.github.DverkaSK:SkinAnatomy:v2.1.0")
 }
 ```
 
@@ -60,7 +60,7 @@ then depend on `mavenLocal()`:
 
 ```kotlin
 repositories { mavenLocal() }
-dependencies { implementation("ru.dverkask:SkinAnatomy:2.0.0") }
+dependencies { implementation("ru.dverkask:SkinAnatomy:2.1.0") }
 ```
 
 ## Usage

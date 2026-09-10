@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "ru.dverkask"
-version = "2.0.0"
+version = "2.1.0"
 description = "A framework-agnostic Kotlin library for editing and composing Minecraft player skins."
 
 repositories {
