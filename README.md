@@ -112,3 +112,7 @@ val texture: java.awt.image.BufferedImage = skin.render()
 ```
 
 Requires JDK 21+ (a matching toolchain is auto-provisioned via Gradle if none is found).
+
+## License
+
+[MIT](LICENSE).

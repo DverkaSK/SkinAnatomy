@@ -49,6 +49,12 @@ publishing {
                 name.set("SkinAnatomy")
                 description.set(project.description)
                 url.set("https://github.com/DverkaSK/SkinAnatomy")
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
             }
         }
     }
