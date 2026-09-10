@@ -23,26 +23,36 @@ of the problem.
 
 ## Adding it to your project
 
-Published via [JitPack](https://jitpack.io/#DverkaSK/SkinAnatomy) - it builds directly from
-this GitHub repository, no publishing step or account needed on your side.
+Published to Maven Central from 2.1.1 on:
 
 ```kotlin
 repositories {
-    maven("https://jitpack.io")
+    mavenCentral()
 }
 
 dependencies {
-    // A tag (recommended, e.g. "v2.1.0"), a branch name, or a commit hash all work.
-    implementation("com.github.DverkaSK:SkinAnatomy:v2.1.0")
+    implementation("io.github.dverkask:skinanatomy:2.1.1")
 }
 ```
 
-The first build for a given tag/commit takes JitPack a minute or two the first time
-anyone requests it (it's compiling this repo on demand); after that it's cached.
+Older versions (up to `v2.1.0`) exist only on [JitPack](https://jitpack.io/#DverkaSK/SkinAnatomy),
+as `com.github.DverkaSK:SkinAnatomy:<tag>` from `maven("https://jitpack.io")`.
+
+### Releasing
+
+Credentials and the signing key go into `~/.gradle/gradle.properties` - never into this
+repository (see the comment in `build.gradle.kts` for the keys). Then:
+
+```bash
+./gradlew publishToMavenCentral
+```
+
+The upload only stages a deployment; review it and press **Publish** at
+<https://central.sonatype.com/publishing>. A Central release can never be deleted or replaced.
 
 ### Local development
 
-Working on SkinAnatomy and another project at the same time? Skip JitPack entirely with a
+Working on SkinAnatomy and another project at the same time? Skip publishing entirely with a
 composite build - point the other project's `settings.gradle.kts` at this repo's
 directory and Gradle substitutes the dependency with the local sources, no publish step:
 
@@ -60,7 +70,7 @@ then depend on `mavenLocal()`:
 
 ```kotlin
 repositories { mavenLocal() }
-dependencies { implementation("ru.dverkask:SkinAnatomy:2.1.0") }
+dependencies { implementation("io.github.dverkask:skinanatomy:2.1.1") }
 ```
 
 ## Usage
