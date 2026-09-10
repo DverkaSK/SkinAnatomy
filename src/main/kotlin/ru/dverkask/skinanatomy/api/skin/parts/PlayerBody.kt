@@ -17,5 +17,8 @@ class PlayerBody(canvas: BufferedImage) : BaseSkinPart(
         SkinSide.RIGHT to SkinCoordinates(16, 20, 4, 12),
         SkinSide.TOP to SkinCoordinates(20, 16, 8, 4),
         SkinSide.BOTTOM to SkinCoordinates(28, 16, 8, 4)
-    )
+    ),
+    // Overlay layer (jacket): the base faces shifted by (0, 16).
+    overlayDx = 0,
+    overlayDy = 16
 )

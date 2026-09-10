@@ -17,5 +17,8 @@ class PlayerLeftArm(canvas: BufferedImage) : BaseSkinPart(
         SkinSide.RIGHT to SkinCoordinates(32, 52, 4, 12),
         SkinSide.TOP to SkinCoordinates(36, 48, 4, 4),
         SkinSide.BOTTOM to SkinCoordinates(40, 48, 4, 4)
-    )
+    ),
+    // Overlay layer (left sleeve): the base faces shifted by (16, 0).
+    overlayDx = 16,
+    overlayDy = 0
 )

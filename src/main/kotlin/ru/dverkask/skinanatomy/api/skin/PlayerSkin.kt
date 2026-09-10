@@ -1,5 +1,6 @@
 package ru.dverkask.skinanatomy.api.skin
 
+import ru.dverkask.skinanatomy.api.enums.SkinLayer
 import ru.dverkask.skinanatomy.api.enums.SkinPartType
 import ru.dverkask.skinanatomy.api.image.ImageLoadResult
 import ru.dverkask.skinanatomy.api.image.ImageLoader
@@ -35,10 +36,15 @@ class PlayerSkin private constructor(private val canvas: BufferedImage) {
     fun part(type: SkinPartType): ISkinPart = parts.first { it.type == type }
 
     /**
-     * Copies every side of [type] from [source] onto this skin, replacing it in place.
+     * Copies every side of [type] from [source] onto this skin, replacing it in place - both
+     * layers, so a grafted head brings its hat along instead of wearing this skin's one.
      * Used to graft a part (head, body, an arm, a leg...) from one skin onto another.
      */
-    fun copyPartFrom(source: PlayerSkin, type: SkinPartType): PlayerSkin = apply {
+    fun copyPartFrom(source: PlayerSkin, type: SkinPartType): PlayerSkin =
+        copyPartFrom(source, type, SkinLayer.entries.toSet())
+
+    /** Like [copyPartFrom], but only the given [layers] of the part are replaced. */
+    fun copyPartFrom(source: PlayerSkin, type: SkinPartType, layers: Set<SkinLayer>): PlayerSkin = apply {
         val sourcePart = source.part(type)
         val targetPart = part(type)
 
@@ -47,8 +53,10 @@ class PlayerSkin private constructor(private val canvas: BufferedImage) {
             // Src replaces pixels outright, alpha included. clearRect would fill with the
             // background colour - opaque black - so a transparent source pixel stayed black.
             graphics.composite = AlphaComposite.Src
-            targetPart.sides.forEach { (side, coords) ->
-                graphics.drawImage(sourcePart.getImage(side), coords.x, coords.y, null)
+            layers.forEach { layer ->
+                targetPart.sides(layer).forEach { (side, coords) ->
+                    graphics.drawImage(sourcePart.getImage(side, layer), coords.x, coords.y, null)
+                }
             }
         } finally {
             graphics.dispose()

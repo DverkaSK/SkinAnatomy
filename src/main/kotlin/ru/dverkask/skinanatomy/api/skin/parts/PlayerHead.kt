@@ -17,5 +17,8 @@ class PlayerHead(canvas: BufferedImage) : BaseSkinPart(
         SkinSide.RIGHT to SkinCoordinates(0, 8, 8, 8),
         SkinSide.TOP to SkinCoordinates(8, 0, 8, 8),
         SkinSide.BOTTOM to SkinCoordinates(16, 0, 8, 8)
-    )
+    ),
+    // Overlay layer (hat): the base faces shifted by (32, 0).
+    overlayDx = 32,
+    overlayDy = 0
 )

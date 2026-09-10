@@ -8,7 +8,8 @@ Minecraft server API - it only deals with the 64x64 skin image itself, so you ca
 in a plugin, a bot, a web service, or a standalone tool.
 
 It lets you address a skin by its anatomical parts - head, body, left/right arm, left/right
-leg - and by side (front, back, left, right, top, bottom), edit any of those regions in
+leg - by side (front, back, left, right, top, bottom) and by layer (the base one, or the
+overlay: hat, jacket, sleeves, pants), edit any of those regions in
 place or graft one part from another skin, and render the result back out as a normal
 `BufferedImage`. Legacy 64x32 skins (pre-1.8, no overlay layer) are transparently upgraded
 to the modern 64x64 layout.
@@ -66,6 +67,7 @@ dependencies { implementation("ru.dverkask:SkinAnatomy:2.0.0") }
 
 ```kotlin
 import ru.dverkask.skinanatomy.api.skin.PlayerSkin
+import ru.dverkask.skinanatomy.api.enums.SkinLayer
 import ru.dverkask.skinanatomy.api.enums.SkinPartType
 
 // Load once - every part below shares this same in-memory canvas.
@@ -77,9 +79,15 @@ skin.head.processImage { image ->
     image // mutate via image.graphics, or return a brand-new BufferedImage
 }
 
-// Graft an entire part (all six sides) from another skin.
-val hat = PlayerSkin.fromUrl("https://example.com/other-skin.png")
-skin.copyPartFrom(hat, SkinPartType.HEAD)
+// Or edit the overlay layer (hat, jacket, sleeves, pants) instead of the base one.
+skin.body.processImage({ image -> image }, SkinLayer.OVERLAY)
+
+// Graft an entire part (all six sides, both layers) from another skin.
+val other = PlayerSkin.fromUrl("https://example.com/other-skin.png")
+skin.copyPartFrom(other, SkinPartType.HEAD)
+
+// Or graft just one layer - e.g. take someone's face but keep this skin's hat.
+skin.copyPartFrom(other, SkinPartType.HEAD, setOf(SkinLayer.BASE))
 
 // Get the composed 64x64 texture back out.
 val texture: java.awt.image.BufferedImage = skin.render()
@@ -90,8 +98,11 @@ val texture: java.awt.image.BufferedImage = skin.render()
 - `PlayerSkin` - loads a skin (`fromUrl` / `fromImage`) and exposes `head`, `body`,
   `leftArm`, `rightArm`, `leftLeg`, `rightLeg`, plus `part(SkinPartType)`, `copyPartFrom`
   and `render()`.
-- `ISkinPart` - `type`, `sides`, `getImage(SkinSide)`, `processImage(ImageProcessor)`.
-- `SkinPartType` / `SkinSide` - the six anatomical parts and the six faces of each.
+- `ISkinPart` - `type`, `sides`, `overlaySides`, `sides(SkinLayer)`,
+  `getImage(SkinSide[, SkinLayer])`, `processImage(ImageProcessor[, SkinLayer])`. Without a
+  layer argument, `getImage` and `processImage` work on the base layer.
+- `SkinPartType` / `SkinSide` / `SkinLayer` - the six anatomical parts, the six faces of
+  each, and the two layers (`BASE`, `OVERLAY`).
 - `ImageLoader` - loads a texture from a URL via `java.net.http.HttpClient`.
 
 ## Building from source

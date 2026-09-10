@@ -17,5 +17,8 @@ class PlayerLeftLeg(canvas: BufferedImage) : BaseSkinPart(
         SkinSide.RIGHT to SkinCoordinates(16, 52, 4, 12),
         SkinSide.TOP to SkinCoordinates(20, 48, 4, 4),
         SkinSide.BOTTOM to SkinCoordinates(24, 48, 4, 4)
-    )
+    ),
+    // Overlay layer (left pants leg): the base faces shifted by (-16, 0).
+    overlayDx = -16,
+    overlayDy = 0
 )
