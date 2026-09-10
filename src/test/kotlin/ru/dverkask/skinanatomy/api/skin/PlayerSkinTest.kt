@@ -104,6 +104,22 @@ class PlayerSkinTest {
     }
 
     @Test
+    fun `processImage takes a plain lambda, as the README shows`() {
+        val skin = PlayerSkin.fromImage(blankSkin())
+
+        skin.head.processImage { image ->
+            image.graphics.apply {
+                color = Color.ORANGE
+                fillRect(0, 0, image.width, image.height)
+                dispose()
+            }
+            image
+        }
+
+        assertEquals(Color.ORANGE.rgb, skin.render().getRGB(8, 8))
+    }
+
+    @Test
     fun `legacy 64x32 skins are upgraded to 64x64 with mirrored left limbs`() {
         val legacy = BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB)
         legacy.graphics.apply {
